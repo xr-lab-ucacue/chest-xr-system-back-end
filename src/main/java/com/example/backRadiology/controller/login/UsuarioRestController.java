@@ -30,13 +30,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backRadiology.infraestructure.repository.login.RoleRepositorio;
+import com.example.backRadiology.infraestructure.repository.login.UserRepository;
 import com.example.backRadiology.infraestructure.services.login.IUsuarioService;
 import com.example.backRadiology.model.login.Role;
 import com.example.backRadiology.model.login.Usuario;
 
+import org.springframework.data.domain.Sort;
 
 
-@CrossOrigin(origins = { "http://localhost:4200" })
+
+@CrossOrigin(origins = { "*" })
 @RestController
 @RequestMapping("/api")
 public class UsuarioRestController {
@@ -65,6 +68,20 @@ public class UsuarioRestController {
 	{
 		return "hola";
 	}
+
+	@Autowired
+    UserRepository userRepository;
+
+	// GET PERSONAS
+    @GetMapping("/personas")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Usuario> getPersonas(){
+		List<Usuario> personas = new ArrayList<Usuario>();
+      personas = userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+      return personas;
+    }
+
+
 
 	@PostMapping("/usuario")
 	public ResponseEntity<?> create(@RequestBody Usuario usuario, BindingResult result) throws Exception {
