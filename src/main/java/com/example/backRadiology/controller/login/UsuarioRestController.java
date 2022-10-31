@@ -84,6 +84,7 @@ public class UsuarioRestController {
 
 
 	@PostMapping("/usuario")
+	// @ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> create(@RequestBody Usuario usuario, BindingResult result) throws Exception {
 		Usuario usuarioNew = null;
 		Map<String, Object> response = new HashMap<>();
@@ -349,7 +350,7 @@ public class UsuarioRestController {
 		return roleRepositorio.findAll();
 	}
 	
-	
+	//????????????????????????????
 	@GetMapping("/usuario/password/lost/{cedula}/{email}")
 	public ResponseEntity<?>  CambiarContrasena(@PathVariable String cedula, @PathVariable String email) {
 
