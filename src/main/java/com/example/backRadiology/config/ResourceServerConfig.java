@@ -1,6 +1,9 @@
 package com.example.backRadiology.config;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +37,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(Arrays.asList("*"));
+		//config.setAllowedOrigins(Arrays.asList("*"));
+		//config.allo(Collections.singletonList("*"));
+		List<String> acceso = new ArrayList<>();
+		acceso.add("*");
+		config.setAllowedOriginPatterns(acceso);
 		//config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS","DELETE"));//ojo no permito eliminaciones por RES API CORS
 		config.setAllowCredentials(true);
