@@ -62,7 +62,7 @@ public class UsuarioRestController {
 
 	// private final Logger log =
 	// LoggerFactory.getLogger(ClienteRestController.class);
-	@Secured({ "ROLE_PUBLICATOR" })
+	@Secured({ "ROLE_USER" })
 	@GetMapping("/hola")
 	public String hola()
 	{
