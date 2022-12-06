@@ -8,7 +8,7 @@ import com.example.backRadiology.model.login.Usuario;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<Usuario, Integer> {
+public interface UserRepository extends JpaRepository<Usuario, Long> {
 
     //Optional<Usuario> findByUsername(String username);
     Optional<Usuario> findByEmail(String email);

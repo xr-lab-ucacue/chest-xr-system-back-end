@@ -81,6 +81,14 @@ public class UsuarioRestController {
       return personas;
     }
 
+	// GET PERSONAS ID
+	@GetMapping("/persona/{id}")
+    @ResponseStatus(HttpStatus.OK)
+	public Usuario getById(@PathVariable int id) {
+		Usuario usuario = userRepository.findById(Long.valueOf(id)).get();
+		return usuario;
+	}
+
 
 
 	@PostMapping("/usuario")
