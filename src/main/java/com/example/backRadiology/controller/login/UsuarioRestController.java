@@ -298,8 +298,7 @@ public class UsuarioRestController {
 	/// Este metodo es para cambiar passwor del usuario
 	@Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_PUBLICATOR" })
 	@PutMapping("/usuario/{email}/{passwordNuevo}")
-	public ResponseEntity<?> updatePassword(@RequestBody String passwordAnterior, BindingResult result,
-			@PathVariable String email, @PathVariable String passwordNuevo) {
+	public ResponseEntity<?> updatePassword(@RequestBody String passwordAnterior, BindingResult result,@PathVariable String email, @PathVariable String passwordNuevo) {
 
 		Usuario usuarioActual = usuarioService.findByEmail(email);
 		passwordNuevo = passwordEncoder.encode(passwordNuevo);
@@ -321,10 +320,10 @@ public class UsuarioRestController {
 		}
 		System.out.println(passwordAnterior);
 		System.out.println(passworUsuarioActual);
-		if (!passwordEncoder.matches(passwordAnterior, passworUsuarioActual)) {
-			response.put("mensaje", "Password Incorrecto");
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		}
+		// if (!passwordEncoder.matches(passwordAnterior, passworUsuarioActual)) {
+		// 	response.put("mensaje", "Password Incorrecto");
+		// 	return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		// }
 
 		try {
 
