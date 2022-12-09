@@ -88,6 +88,13 @@ public class UsuarioRestController {
 		Usuario usuario = userRepository.findById(Long.valueOf(id)).get();
 		return usuario;
 	}
+	
+	@GetMapping("/user/{email}")
+    @ResponseStatus(HttpStatus.OK)
+	public Usuario getByEmail(@PathVariable String email) {
+		Usuario userr = userRepository.findByEmail(email).get();
+		return userr;
+	}
 
 
 
