@@ -399,17 +399,17 @@ public class UsuarioRestController {
 			usuarioUpdated = usuarioService.save(usuarioActual);
 
 			// send email
-				senderService.sendSimpleEmail("pepewee0@gmail.com",
-				"This is email body",
-				"This is email subject");
+				senderService.sendSimpleEmail(email,
+				"XR CHEST, Se restablecio tu contraseña",
+				"Tu nueva contraseña es: " + encodePassword);
 			
 
 		} catch (Exception e) {
 			response.put("mensaje", "El cliente no existe");
 		}
 
-		// response.put("mensaje", "El cliente ha sido actualizado con éxito!");
-		// response.put("cliente", usuarioUpdated);
+		response.put("mensaje", "El cliente ha sido actualizado con éxito!");
+		response.put("cliente", usuarioUpdated);
 
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 	}
