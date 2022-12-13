@@ -31,13 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backRadiology.infraestructure.repository.login.RoleRepositorio;
 import com.example.backRadiology.infraestructure.repository.login.UserRepository;
+import com.example.backRadiology.infraestructure.services.login.EmailSenderService;
 import com.example.backRadiology.infraestructure.services.login.IUsuarioService;
 import com.example.backRadiology.model.login.Role;
 import com.example.backRadiology.model.login.Usuario;
 
 import org.springframework.data.domain.Sort;
-
-
+import javax.mail.MessagingException;
 
 @CrossOrigin(origins = { "*" })
 @RestController
@@ -52,6 +52,9 @@ public class UsuarioRestController {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+
+	@Autowired
+	private EmailSenderService senderService;
 
 
 	@Autowired
@@ -366,7 +369,7 @@ public class UsuarioRestController {
 	
 	//????????????????????????????
 	@GetMapping("/usuario/password/lost/{cedula}/{email}")
-	public ResponseEntity<?>  CambiarContrasena(@PathVariable String cedula, @PathVariable String email) {
+	public ResponseEntity<?>  CambiarContrasena(@PathVariable String cedula, @PathVariable String email) throws MessagingException{
 
 		Map<String, Object> response = new HashMap<>();
 
@@ -394,14 +397,19 @@ public class UsuarioRestController {
 				usuarioActual.setRevocarToken(true);
 			}
 			usuarioUpdated = usuarioService.save(usuarioActual);
+
+			// send email
+				senderService.sendSimpleEmail("pepewee0@gmail.com",
+				"This is email body",
+				"This is email subject");
 			
 
 		} catch (Exception e) {
 			response.put("mensaje", "El cliente no existe");
 		}
 
-		response.put("mensaje", "El cliente ha sido actualizado con éxito!");
-		response.put("cliente", usuarioUpdated);
+		// response.put("mensaje", "El cliente ha sido actualizado con éxito!");
+		// response.put("cliente", usuarioUpdated);
 
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 	}
