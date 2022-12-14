@@ -76,6 +76,7 @@ public class UsuarioRestController {
     UserRepository userRepository;
 
 	// GET PERSONAS
+	@Secured({ "ROLE_ADMIN" })
     @GetMapping("/personas")
     @ResponseStatus(HttpStatus.OK)
     public List<Usuario> getPersonas(){
@@ -85,6 +86,7 @@ public class UsuarioRestController {
     }
 
 	// GET PERSONAS ID
+	@Secured({ "ROLE_USER" })
 	@GetMapping("/persona/{id}")
     @ResponseStatus(HttpStatus.OK)
 	public Usuario getById(@PathVariable int id) {
@@ -92,6 +94,7 @@ public class UsuarioRestController {
 		return usuario;
 	}
 	
+	@Secured({ "ROLE_USER" })
 	@GetMapping("/user/{email}")
     @ResponseStatus(HttpStatus.OK)
 	public Usuario getByEmail(@PathVariable String email) {
