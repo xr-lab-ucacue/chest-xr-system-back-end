@@ -86,7 +86,7 @@ public class UsuarioRestController {
     }
 
 	// GET PERSONAS ID
-	@Secured({ "ROLE_USER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_PUBLICATOR" })
 	@GetMapping("/persona/{id}")
     @ResponseStatus(HttpStatus.OK)
 	public Usuario getById(@PathVariable int id) {
@@ -94,7 +94,7 @@ public class UsuarioRestController {
 		return usuario;
 	}
 	
-	@Secured({ "ROLE_USER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_PUBLICATOR" })
 	@GetMapping("/user/{email}")
     @ResponseStatus(HttpStatus.OK)
 	public Usuario getByEmail(@PathVariable String email) {
