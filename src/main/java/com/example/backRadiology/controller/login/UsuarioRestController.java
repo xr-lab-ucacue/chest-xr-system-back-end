@@ -39,6 +39,8 @@ import com.example.backRadiology.model.login.Usuario;
 import org.springframework.data.domain.Sort;
 import javax.mail.MessagingException;
 
+
+
 @CrossOrigin(origins = { "*" })
 @RestController
 @RequestMapping("/api")
@@ -71,6 +73,7 @@ public class UsuarioRestController {
 	{
 		return "hola";
 	}
+
 
 	@Autowired
     UserRepository userRepository;
@@ -370,7 +373,7 @@ public class UsuarioRestController {
 		return roleRepositorio.findAll();
 	}
 	
-	//????????????????????????????
+	//change password with Email
 	@GetMapping("/usuario/password/lost/{cedula}/{email}")
 	public ResponseEntity<?>  CambiarContrasena(@PathVariable String cedula, @PathVariable String email) throws MessagingException{
 
