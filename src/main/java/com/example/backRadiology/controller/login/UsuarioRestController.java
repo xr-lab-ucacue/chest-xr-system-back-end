@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -39,8 +37,6 @@ import com.example.backRadiology.model.login.Usuario;
 import org.springframework.data.domain.Sort;
 import javax.mail.MessagingException;
 
-
-
 @CrossOrigin(origins = { "*" })
 @RestController
 @RequestMapping("/api")
@@ -58,10 +54,9 @@ public class UsuarioRestController {
 	@Autowired
 	private EmailSenderService senderService;
 
-
 	@Autowired
 	TokenStore tokenStore;
-	
+
 	@Autowired
 	ApprovalStore approvalStore;
 
@@ -69,43 +64,39 @@ public class UsuarioRestController {
 	// LoggerFactory.getLogger(ClienteRestController.class);
 	@Secured({ "ROLE_USER" })
 	@GetMapping("/hola")
-	public String hola()
-	{
+	public String hola() {
 		return "hola";
 	}
 
-
 	@Autowired
-    UserRepository userRepository;
+	UserRepository userRepository;
 
 	// GET PERSONAS
 	@Secured({ "ROLE_ADMIN" })
-    @GetMapping("/personas")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Usuario> getPersonas(){
+	@GetMapping("/personas")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Usuario> getPersonas() {
 		List<Usuario> personas = new ArrayList<Usuario>();
-      personas = userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-      return personas;
-    }
+		personas = userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		return personas;
+	}
 
 	// GET PERSONAS ID
 	@Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_PUBLICATOR" })
 	@GetMapping("/persona/{id}")
-    @ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(HttpStatus.OK)
 	public Usuario getById(@PathVariable int id) {
 		Usuario usuario = userRepository.findById(Long.valueOf(id)).get();
 		return usuario;
 	}
-	
+
 	@Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_PUBLICATOR" })
 	@GetMapping("/user/{email}")
-    @ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(HttpStatus.OK)
 	public Usuario getByEmail(@PathVariable String email) {
 		Usuario userr = userRepository.findByEmail(email).get();
 		return userr;
 	}
-
-
 
 	@PostMapping("/usuario")
 	// @ResponseStatus(HttpStatus.OK)
@@ -132,7 +123,7 @@ public class UsuarioRestController {
 			usuario.setPassword(passwordBcrypt);
 			String emailEncripted = passwordEncoder.encode(usuario.getEmail());
 			emailEncripted = emailEncripted.replace("/", "J");
-			
+
 			usuario.setEmailEncripted(emailEncripted);
 			usuarioNew = usuarioService.save(usuario);
 
@@ -186,12 +177,10 @@ public class UsuarioRestController {
 			usuarioActual.setTelefono(usuario.getTelefono());
 			usuarioActual.setDireccion(usuario.getDireccion());
 			usuarioActual.setEstado(usuario.getEstado());
-			if(usuarioActual.getEstadoTokenRegistro()==null)
-			{
+			if (usuarioActual.getEstadoTokenRegistro() == null) {
 				usuarioActual.setEstadoTokenRegistro(false);
 			}
-			if(!usuarioActual.getEstado())
-			{
+			if (!usuarioActual.getEstado()) {
 				usuarioActual.setRevocarToken(true);
 			}
 
@@ -217,9 +206,7 @@ public class UsuarioRestController {
 
 		Usuario usuarioActual = usuarioService.findByEmail(email);
 
-
 		Usuario usuarioUpdated = null;
-
 
 		List<Role> allRoles = roleRepositorio.findAll();
 		List<Role> selectedRoles = new ArrayList<Role>();
@@ -314,7 +301,8 @@ public class UsuarioRestController {
 	/// Este metodo es para cambiar passwor del usuario
 	@Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_PUBLICATOR" })
 	@PutMapping("/usuario/{email}/{passwordNuevo}")
-	public ResponseEntity<?> updatePassword(@RequestBody String passwordAnterior, BindingResult result,@PathVariable String email, @PathVariable String passwordNuevo) {
+	public ResponseEntity<?> updatePassword(@RequestBody String passwordAnterior, BindingResult result,
+			@PathVariable String email, @PathVariable String passwordNuevo) {
 
 		Usuario usuarioActual = usuarioService.findByEmail(email);
 		passwordNuevo = passwordEncoder.encode(passwordNuevo);
@@ -337,8 +325,9 @@ public class UsuarioRestController {
 		System.out.println(passwordAnterior);
 		System.out.println(passworUsuarioActual);
 		// if (!passwordEncoder.matches(passwordAnterior, passworUsuarioActual)) {
-		// 	response.put("mensaje", "Password Incorrecto");
-		// 	return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		// response.put("mensaje", "Password Incorrecto");
+		// return new ResponseEntity<Map<String, Object>>(response,
+		// HttpStatus.NOT_FOUND);
 		// }
 
 		try {
@@ -372,43 +361,41 @@ public class UsuarioRestController {
 	public List<Role> findAllRoles() {
 		return roleRepositorio.findAll();
 	}
-	
-	//change password with Email
+
+	// change password with Email
 	@GetMapping("/usuario/password/lost/{cedula}/{email}")
-	public ResponseEntity<?>  CambiarContrasena(@PathVariable String cedula, @PathVariable String email) throws MessagingException{
+	public ResponseEntity<?> CambiarContrasena(@PathVariable String cedula, @PathVariable String email)
+			throws MessagingException {
 
 		Map<String, Object> response = new HashMap<>();
 
 		Usuario usuarioUpdated = null;
 
 		try {
-			
+
 			Usuario usuarioActual = usuarioService.findUsuarioByCedulaAndEmail(cedula, email);
 
-			if (usuarioActual == null)
-			{
-				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);	
+			if (usuarioActual == null) {
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 			}
 
 			String generatedPassword = alphaNumericString(6);
 			String encodePassword = new String(Base64.getEncoder().encode(generatedPassword.getBytes()));
-		    
+
 			usuarioActual.setPassword(passwordEncoder.encode(encodePassword));
-			if(usuarioActual.getEstadoTokenRegistro()==null)
-			{
+			if (usuarioActual.getEstadoTokenRegistro() == null) {
 				usuarioActual.setEstadoTokenRegistro(false);
 			}
-			if(!usuarioActual.getEstado())
-			{
+			if (!usuarioActual.getEstado()) {
 				usuarioActual.setRevocarToken(true);
 			}
 			usuarioUpdated = usuarioService.save(usuarioActual);
 
 			// send email
-				senderService.sendSimpleEmail(email,
-				"XR CHEST, Se restablecio tu contraseña",
-				"Tu nueva contraseña es: " + encodePassword);
-			
+			senderService.sendSimpleEmail(email,
+					"Recupoeración de cuenta XRAY- SYSTEM. Se restablecio tu contraseña",
+					"Tu nueva contraseña es: " + encodePassword + "\n"
+							+ " Si no estas tratando de recuperar tu cuenta de inicio de sesión de XRAY- SYSTEM, por favor ignora este correo electrónico. Es posible que otro usuario haya introducido su información de inicio de sesión de manera incorrecta.");
 
 		} catch (Exception e) {
 			response.put("mensaje", "El cliente no existe");
@@ -419,14 +406,15 @@ public class UsuarioRestController {
 
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
 	}
-	public static String alphaNumericString(int len) {
-	    String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	    Random rnd = new Random();
 
-	    StringBuilder sb = new StringBuilder(len);
-	    for (int i = 0; i < len; i++) {
-	        sb.append(AB.charAt(rnd.nextInt(AB.length())));
-	    }
-	    return sb.toString();
+	public static String alphaNumericString(int len) {
+		String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		Random rnd = new Random();
+
+		StringBuilder sb = new StringBuilder(len);
+		for (int i = 0; i < len; i++) {
+			sb.append(AB.charAt(rnd.nextInt(AB.length())));
+		}
+		return sb.toString();
 	}
 }
