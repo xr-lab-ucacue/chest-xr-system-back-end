@@ -76,7 +76,7 @@ public class ApiController {
         try {
             RestTemplate restTemplate = new RestTemplate();
             // String url = "http://172.31.84.1:5000/file-upload";
-            String url = "http://172.16.110.135:9090/radiografia";
+            String url = "http://127.0.0.1:5000/radiografia";
             HttpMethod requestMethod = HttpMethod.POST;
             // HttpMethod requestMethod1 = HttpMethod.GET;
             HttpHeaders headers = new HttpHeaders();
@@ -113,11 +113,8 @@ public class ApiController {
             e.printStackTrace();
         }
 
-        response1.put("Mensaje",
-                "El ingreso de los resultados obtenidos por el IA se ha realizado con exito creado con éxito!");
-
-        // response1.put("prediccion", respuesta);
-        response1.put("Prediccion", respuesta.substring(40, respuesta.length()-160));
+         response1.put("prediccion", respuesta);
+        //response1.put("Prediccion", respuesta.substring(40, respuesta.length()-160));
 
         return new ResponseEntity<Map<String, Object>>(response1, HttpStatus.ACCEPTED);
     }
