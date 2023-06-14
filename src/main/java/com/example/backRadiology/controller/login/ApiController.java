@@ -16,12 +16,17 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.backRadiology.model.Prediction;
+
+import javafx.scene.image.Image;
 
 @RestController
 @RequestMapping("/api")
@@ -66,13 +71,13 @@ public class ApiController {
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
             
             // Realizar la llamada al servicio Flask
-            ResponseEntity<Object[]> response = restTemplate.exchange(flaskServiceUrl, requestMethod, requestEntity,Object[].class);
+            ResponseEntity<Object[]> response = restTemplate.exchange(flaskServiceUrl, requestMethod, requestEntity, Object[].class);
 
-           // Obtener el array de objetos de la respuesta
-           Object[] objects = response.getBody();
+            // Obtener el array de objetos de la respuesta
+            Object[] objects = response.getBody();
 
-           // Retornamos los objetos recibidos
-           return new ResponseEntity<>(objects, HttpStatus.OK);
+            // Retornamos los objetos recibidos
+            return new ResponseEntity<>(objects, HttpStatus.OK);
            
         } catch (IOException e) {
             e.printStackTrace();
