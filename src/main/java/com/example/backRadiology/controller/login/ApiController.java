@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,10 +72,14 @@ public class ApiController {
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
             
             // Realizar la llamada al servicio Flask
-            ResponseEntity<Object[]> response = restTemplate.exchange(flaskServiceUrl, requestMethod, requestEntity, Object[].class);
-
+            //ResponseEntity<Object[]> response = restTemplate.exchange(flaskServiceUrl, requestMethod, requestEntity, Object[].class);
             // Obtener el array de objetos de la respuesta
-            Object[] objects = response.getBody();
+            //Object[] objects = response.getBody();
+
+            // Realizar la llamada al servicio Flask
+            ResponseEntity<Prediction[]> response = restTemplate.exchange(flaskServiceUrl, requestMethod, requestEntity, Prediction[].class);
+            // Obtener el array de objetos de la respuesta
+            Prediction[] objects = response.getBody();
 
             // Retornamos los objetos recibidos
             return new ResponseEntity<>(objects, HttpStatus.OK);
@@ -82,6 +87,9 @@ public class ApiController {
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ResourceAccessException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Prediction server is down", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
