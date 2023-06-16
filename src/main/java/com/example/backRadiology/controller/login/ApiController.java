@@ -36,6 +36,7 @@ public class ApiController {
     public ResponseEntity<?> upload3(@RequestParam(value = "file") MultipartFile file) throws Exception {
 
         String flaskServiceUrl = "http://127.0.0.1:5000/radiografia";
+        File convFile = null;
 
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("No file selected for uploading");
@@ -48,7 +49,8 @@ public class ApiController {
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             // Convertir multipart file a file
-            File convFile = new File(file.getOriginalFilename());
+            //File convFile = new File(file.getOriginalFilename());
+            convFile = new File(file.getOriginalFilename());
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream(convFile);
             fos.write(file.getBytes());
@@ -92,6 +94,11 @@ public class ApiController {
             e.printStackTrace();
             String errorMessage = extractErrorMessage(e.getMessage());
             return ResponseEntity.badRequest().body("Error: " + errorMessage);
+        } finally {
+            // Eliminar el archivo
+            if (convFile != null && convFile.exists()) {
+                convFile.delete();
+            }
         }
     }
 
