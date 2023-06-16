@@ -99,7 +99,6 @@ public class UsuarioRestController {
 	}
 
 	@PostMapping("/usuario")
-	// @ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> create(@RequestBody Usuario usuario, BindingResult result) throws Exception {
 		Usuario usuarioNew = null;
 		Map<String, Object> response = new HashMap<>();
