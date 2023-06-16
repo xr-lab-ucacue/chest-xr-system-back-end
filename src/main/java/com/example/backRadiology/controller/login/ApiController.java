@@ -88,7 +88,19 @@ public class ApiController {
         } catch (ResourceAccessException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Prediction server is down", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception   e) {
+            e.printStackTrace();
+            String errorMessage = extractErrorMessage(e.getMessage());
+            return ResponseEntity.badRequest().body("Error: " + errorMessage);
         }
+    }
+
+    private String extractErrorMessage(String fullErrorMessage) {
+        String startText = "\"message\":\"";
+        String endText = "\"}";
+        int startIndex = fullErrorMessage.indexOf(startText) + startText.length();
+        int endIndex = fullErrorMessage.indexOf(endText);
+        return fullErrorMessage.substring(startIndex, endIndex);
     }
 
 }
