@@ -133,7 +133,7 @@ public class UsuarioRestController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	// ACTUALOIZAR USUARIO
+	// ACTUALIZAR USUARIO
 	@Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_PUBLICATOR" })
 	@PutMapping("/usuario/{email}")
 	public ResponseEntity<?> update(@RequestBody Usuario usuario, BindingResult result, @PathVariable String email) {

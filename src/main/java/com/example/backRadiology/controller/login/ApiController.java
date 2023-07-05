@@ -25,8 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backRadiology.model.Prediction;
 
-
-
 @RestController
 @RequestMapping("/api")
 public class ApiController {
@@ -49,7 +47,7 @@ public class ApiController {
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             // Convertir multipart file a file
-            //File convFile = new File(file.getOriginalFilename());
+            // File convFile = new File(file.getOriginalFilename());
             convFile = new File(file.getOriginalFilename());
             convFile.createNewFile();
             FileOutputStream fos = new FileOutputStream(convFile);
@@ -70,30 +68,30 @@ public class ApiController {
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("file", fileEntity);
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-            
-            // Realizar la llamada al servicio Flask
-            //ResponseEntity<Object[]> response = restTemplate.exchange(flaskServiceUrl, requestMethod, requestEntity, Object[].class);
-            // Obtener el array de objetos de la respuesta
-            //Object[] objects = response.getBody();
 
             // Realizar la llamada al servicio Flask
-            ResponseEntity<Prediction[]> response = restTemplate.exchange(flaskServiceUrl, requestMethod, requestEntity, Prediction[].class);
+            // ResponseEntity<Object[]> response = restTemplate.exchange(flaskServiceUrl,
+            // requestMethod, requestEntity, Object[].class);
+            // Obtener el array de objetos de la respuesta
+            // Object[] objects = response.getBody();
+
+            // Realizar la llamada al servicio Flask
+            ResponseEntity<Prediction[]> response = restTemplate.exchange(flaskServiceUrl, requestMethod, requestEntity,
+                    Prediction[].class);
             // Obtener el array de objetos de la respuesta
             Prediction[] objects = response.getBody();
 
             // Retornamos los objetos recibidos
             return new ResponseEntity<>(objects, HttpStatus.OK);
-           
+
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            String errorMessage = extractErrorMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal Server Error: " + errorMessage);
         } catch (ResourceAccessException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Prediction server is down", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception   e) {
-            e.printStackTrace();
-            String errorMessage = extractErrorMessage(e.getMessage());
-            return ResponseEntity.badRequest().body("Error: " + errorMessage);
         } finally {
             // Eliminar el archivo
             if (convFile != null && convFile.exists()) {
