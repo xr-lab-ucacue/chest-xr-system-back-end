@@ -74,7 +74,7 @@ public class UsuarioRestController {
 	}
 
 	// GET PERSONAS ID
-	@Secured({ "ROLE_ADMIN", "ROLE_USER", "ROLE_PUBLICATOR" })
+	@Secured({ "ROLE_ADMIN"})
 	@GetMapping("/persona/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Usuario getById(@PathVariable int id) {
